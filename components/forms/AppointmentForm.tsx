@@ -10,7 +10,8 @@ import { z } from "zod";
 import { SelectItem } from "@/components/ui/select";
 import { Doctors } from "@/constants";
 import {
-  createAppointment
+  createAppointment,
+  updateAppointment
 } from "@/lib/actions/appointment.actions";
 import { getAppointmentSchema } from "@/lib/validation";
 import { Appointment } from "@/types/appwrite.types";
@@ -25,7 +26,7 @@ import CustomFormField from "../CustomFormField";
 export const AppointmentForm = ({
   userId,
   patientId,
-  type = "create",
+  type,
   appointment,
   setOpen,
 }: {
@@ -34,6 +35,7 @@ export const AppointmentForm = ({
   type: "create" | "schedule" | "cancel";
   appointment?: Appointment;
   setOpen?: Dispatch<SetStateAction<boolean>>;
+  // setOpen: (open: boolean) => void;
 }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -43,9 +45,11 @@ export const AppointmentForm = ({
   const form = useForm<z.infer<typeof AppointmentFormValidation>>({
     resolver: zodResolver(AppointmentFormValidation),
     defaultValues: {
-      primaryPhysician: appointment?.primaryPhysician || "",
-      schedule: appointment ? new Date(appointment.schedule) : new Date(),
-      reason: appointment?.reason || "",
+      primaryPhysician: appointment ? appointment?.primaryPhysician : "",
+      schedule: appointment
+        ? new Date(appointment?.schedule!)
+        : new Date(Date.now()),
+      reason: appointment ? appointment.reason : "",
       note: appointment?.note || "",
       cancellationReason: appointment?.cancellationReason || "",
    },   
@@ -55,6 +59,9 @@ export const AppointmentForm = ({
   //   values: z.infer<typeof AppointmentFormValidation>
   // ) => {
     async function onSubmit(values: z.infer<typeof AppointmentFormValidation>) {
+
+      console.log(userId);
+      console.log(patientId);
 
     if (!userId || !patientId) {
         console.error("User ID or Patient ID is missing.");
@@ -96,7 +103,7 @@ export const AppointmentForm = ({
         console.log(newAppointment);
 
         if (newAppointment) {
-          // console.log("I'm in IF");
+          console.log("I'm in IF");
 
           form.reset();
           router.push(
@@ -104,7 +111,7 @@ export const AppointmentForm = ({
           );
         }
       } else {
-        // console.log("I'm in ELSE");
+        console.log("I'm in ELSE");
 
         const appointmentToUpdate = {
           userId,
@@ -118,12 +125,12 @@ export const AppointmentForm = ({
           type,
         };
 
-        // const updatedAppointment = await updateAppointment(appointmentToUpdate);
+        const updatedAppointment = await updateAppointment(appointmentToUpdate);
 
-        // if (updatedAppointment) {
-        //   setOpen && setOpen(false);
-        //   form.reset();
-        // }
+        if (updatedAppointment) {
+          setOpen && setOpen(false);
+          form.reset();
+        }
       }
     } catch (error) {
       console.log(error);
@@ -132,8 +139,6 @@ export const AppointmentForm = ({
   };
 
   let buttonLabel;
-
-  // console.log("Checking");
 
   switch (type) {
     case "cancel":
@@ -147,7 +152,6 @@ export const AppointmentForm = ({
       buttonLabel = "Create Appointment";
   }
 
-  // console.log("Checking");
 
   return (
     <Form {...form}>
