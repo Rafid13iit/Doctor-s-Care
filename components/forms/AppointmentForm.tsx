@@ -60,8 +60,8 @@ export const AppointmentForm = ({
   // ) => {
     async function onSubmit(values: z.infer<typeof AppointmentFormValidation>) {
 
-      console.log(userId);
-      console.log(patientId);
+      console.log("USER_ID: ", userId);
+      console.log("PATIENT_ID: ", patientId);
 
     if (!userId || !patientId) {
         console.error("User ID or Patient ID is missing.");

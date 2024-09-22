@@ -1,7 +1,7 @@
 "use server";
 
-import { ID, Query } from "node-appwrite";
-import { InputFile } from 'node-appwrite/file';
+import { ID, InputFile, Query } from "node-appwrite";
+// import { InputFile } from 'node-appwrite/file';
 
 import {
   BUCKET_ID,
@@ -64,7 +64,8 @@ export const registerPatient = async ({
     if (identificationDocument) {
       const inputFile =
         identificationDocument &&
-        InputFile.fromBuffer(
+        // InputFile.fromBuffer(
+        InputFile.fromBlob(
           identificationDocument?.get("blobFile") as Blob,
           identificationDocument?.get("fileName") as string
         );
@@ -102,7 +103,7 @@ export const getPatient = async (userId: string) => {
     const patients = await databases.listDocuments(
       DATABASE_ID!,
       PATIENT_COLLECTION_ID!,
-      // [Query.equal("userId", [userId])]
+      [Query.equal("userId", [userId])],
     );
     
     // console.log("Retrieved patients: ", patients);

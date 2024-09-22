@@ -12,7 +12,7 @@ import { StatusBadge } from "../StatusBadge";
 
 export const columns: ColumnDef<Appointment>[] = [
   {
-    header: "#",
+    header: "SL.",
     cell: ({ row }) => {
       return <p className="text-14-medium ">{row.index + 1}</p>;
     },
@@ -22,6 +22,7 @@ export const columns: ColumnDef<Appointment>[] = [
     header: "Patient",
     cell: ({ row }) => {
       const appointment = row.original;
+      // console.log(appointment.patient);
       return <p className="text-14-medium ">{appointment.patient.name}</p>;
     },
   },
