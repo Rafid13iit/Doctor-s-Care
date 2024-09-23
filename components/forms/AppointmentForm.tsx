@@ -99,11 +99,11 @@ export const AppointmentForm = ({
 
         const newAppointment = await createAppointment(appointment);
 
-        console.log(userId);
-        console.log(newAppointment);
+        // console.log(userId);
+        // console.log(newAppointment);
 
         if (newAppointment) {
-          console.log("I'm in IF");
+          // console.log("I'm in IF");
 
           form.reset();
           router.push(
@@ -111,7 +111,7 @@ export const AppointmentForm = ({
           );
         }
       } else {
-        console.log("I'm in ELSE");
+        // console.log("I'm in ELSE");
 
         const appointmentToUpdate = {
           userId,
